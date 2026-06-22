@@ -1,0 +1,61 @@
+# ╔═══════════════════════════════════════════════════════════╗
+# ║  ARCHON-IX | .GITIGNORE PROTOCOL                        ║
+# ║  Purpose: Boundary Definition & Asset Isolation          ║
+# ║  Directive: Protect the estate; exclude entropy.         ║
+# ╚═══════════════════════════════════════════════════════════╝
+
+# 🛡️ 1. SOVEREIGN SECRETS (Critical)
+# Prevents exposure of API keys, database credentials, and private keys.
+.env
+.env.local
+.env.*.local
+*.pem
+keys.json
+config/credentials.json
+
+# 📦 2. DEPENDENCY ENTROPY
+# Excludes massive dependency folders managed by package managers.
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 🏗️ 3. BUILD ARTIFACTS (The Square of Objective Reality)
+# Source code is the truth; compiled files are disposable.
+dist/
+build/
+.vite/
+out/
+.nuxt/
+.next/
+
+# 💻 4. EDITOR & SYSTEM CLUTTER
+# Protects the repository from local machine noise.
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 🦋 5. FLUTTER & SUPABASE SILOS (Codex Alignment)
+# Specific exclusions for the technical architecture modules.
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.build/
+
+# Supabase
+supabase/.branches
+supabase/.temp
+
+#  6. THE SHADOW APPENDIX (Proprietary Logs)
+# Ensure Ghost Protocol trackers and raw data dumps remain local until sanitized.
+*.csv (Optional: Uncomment if you store raw Ghost logs locally)
+logs/
+audit-trail.json
