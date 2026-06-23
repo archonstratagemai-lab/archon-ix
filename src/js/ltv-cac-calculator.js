@@ -72,6 +72,15 @@ export class LTVCACCalculator {
     if (event && typeof event.preventDefault === 'function') event.preventDefault();
     if (!this.form || !this.result) return;
 
+    // Defensive: warn when a form input id is missing so selector drift
+    // fails loud (dev console surfaces the gap) instead of silently
+    // rendering '$0' / '—' on the page.
+    for (const id of ['#retainer', '#contract', '#cac']) {
+      if (!this.form.querySelector(id)) {
+        console.warn(`[ltv-cac-calculator] form input ${id} not found`);
+      }
+    }
+
     const data = {
       retainer:       this.form.querySelector('#retainer')?.value,
       contractMonths: this.form.querySelector('#contract')?.value,
