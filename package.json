@@ -1,1 +1,25 @@
-{}
+{
+  "name": "archon-ix",
+  "version": "2.1.0",
+  "description": "Strategic Sovereignty & Legacy Architecture | Digital Execution Layer for the ARCHON-IX Master Codex",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archonstratagemai-lab/archon-ix.git"
+  },
+  "author": "ARCHON-IX | Koda Kinetix Press",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/archonstratagemai-lab/archon-ix/issues"
+  },
+  "homepage": "https://archonstratagemai-lab.github.io/archon-ix",
+  "private": true
+}
