@@ -45,7 +45,12 @@ export class GhostTracker {
       path: location.pathname,
     });
 
-    window.addEventListener('scroll', this._onScroll.bind(this), { passive: true });
+    // Replace the global scroll listener with an IntersectionObserver
+    // watching doc-percent markers. The browser fires a single event
+    // per marker regardless of scroll speed, so we no longer pay a
+    // per-pixel handler cost or need rAF debounce glue here.
+    this._observeScrollMilestones();
+
     document.addEventListener('click', this._onClick.bind(this), { passive: true });
 
     // Best-effort flush on tab close.
@@ -94,17 +99,41 @@ export class GhostTracker {
 
   // ----------------------------------------------------- Internals
 
-  _onScroll() {
-    const doc = document.documentElement;
-    const max = (doc.scrollHeight - doc.clientHeight) || 1;
-    const pct = Math.min(100, Math.max(0, Math.round((window.scrollY / max) * 100)));
-
-    for (const m of GHOST_MILESTONES) {
-      if (pct >= m && !this._milestonesHit.has(m)) {
-        this._milestonesHit.add(m);
-        this.track('scroll-depth', { percent: m });
-      }
+  /**
+   * Drop invisible markers at 25/50/75/100% of the body height and
+   * fire one scroll-depth event the first time each crosses the
+   * viewport. Positioning is owned entirely by CSS via
+   * `.ghost-milestone[data-percent="…"]`; we just stamp the data
+   * attribute and let the cascade place each marker. Anchors on
+   * `body { position: relative; }` in style.css so `top: <pct>%`
+   * resolves against the full document, not the viewport.
+   */
+  _observeScrollMilestones() {
+    for (const pct of GHOST_MILESTONES) {
+      const marker = document.createElement('div');
+      marker.className = 'ghost-milestone';
+      marker.dataset.percent = String(pct);
+      marker.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(marker);
     }
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const pct = Number(entry.target.dataset.percent);
+        if (!Number.isFinite(pct) || this._milestonesHit.has(pct)) {
+          io.unobserve(entry.target);
+          continue;
+        }
+        this._milestonesHit.add(pct);
+        this.track('scroll-depth', { percent: pct });
+        io.unobserve(entry.target);
+      }
+    }, { threshold: 0 });
+
+    document.querySelectorAll('.ghost-milestone').forEach((el) => io.observe(el));
   }
 
   _onClick(event) {

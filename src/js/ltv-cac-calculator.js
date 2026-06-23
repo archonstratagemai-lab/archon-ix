@@ -31,11 +31,18 @@ export class LTVCACCalculator {
   init() {
     if (!this.form || !this.result || this._bound) return;
     this._bound = true;
-    this.form.addEventListener('submit', this._onSubmit.bind(this));
-    // Live recalculation as user types
-    this.form.addEventListener('input', this._onSubmit.bind(this));
-    // Compute once on load for default values
-    this._onSubmit(new Event('init'));
+
+    // Live recalculation as the user types — the single render path
+    // runs on every input event. A measure-level submit is unnecessary
+    // because we no-op when the input value is non-numeric and the
+    // output is always up-to-date by the time they stop typing.
+    this.form.addEventListener('input', this._render.bind(this));
+    // Swallow Enter / native submit so keyboard activation reloads the
+    // page with a GET request. The `input` listener already keeps the
+    // result panel live, so we only need to preventDefault here.
+    this.form.addEventListener('submit', (e) => e.preventDefault());
+    // Compute once on load so the default values render immediately.
+    this._render(null);
   }
 
   // ----------------------------------------------------- Math
@@ -68,8 +75,7 @@ export class LTVCACCalculator {
 
   // ------------------------------------------------- Rendering
 
-  _onSubmit(event) {
-    if (event && typeof event.preventDefault === 'function') event.preventDefault();
+  _render(_event) {
     if (!this.form || !this.result) return;
 
     // Defensive: warn when a form input id is missing so selector drift
@@ -81,10 +87,18 @@ export class LTVCACCalculator {
       }
     }
 
-    const data = {
+    // Read raw input values as strings, then normalize once. Both the
+    // math and the formatting paths consume the same numeric data so
+    // a non-numeric input can never produce a '—' for any field.
+    const raw = {
       retainer:       this.form.querySelector('#retainer')?.value,
       contractMonths: this.form.querySelector('#contract')?.value,
       cac:            this.form.querySelector('#cac')?.value,
+    };
+    const data = {
+      retainer:       Number(raw.retainer) || 0,
+      contractMonths: Number(raw.contractMonths) || 0,
+      cac:            Number(raw.cac) || 0,
     };
 
     const { ltv, ratio, paybackMonths, health } = this.compute(data);

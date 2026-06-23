@@ -1,25 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="ARCHON-IX emblem">
-  <!-- Sovereign Navy field -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="ARCHON-IX sovereign mark">
+  <!-- Sovereign navy backdrop -->
   <rect width="100" height="100" fill="#0A1128"/>
-
-  <!-- Outer architectural gold square -->
-  <rect x="14" y="14" width="72" height="72" fill="none" stroke="#C9A961" stroke-width="2"/>
-
-  <!-- Inner geometric compass star -->
-  <g fill="#C9A961">
-    <!-- North -->
-    <polygon points="50,20 54,46 50,52 46,46"/>
-    <!-- East -->
-    <polygon points="80,50 54,54 48,50 54,46"/>
-    <!-- South -->
-    <polygon points="50,80 46,54 50,48 54,54"/>
-    <!-- West -->
-    <polygon points="20,50 46,46 52,50 46,54"/>
-    <!-- Center hub -->
-    <circle cx="50" cy="50" r="4"/>
-  </g>
-
-  <!-- Diagonal accent lines -->
-  <line x1="14" y1="14" x2="86" y2="86" stroke="#C9A961" stroke-width="0.5" stroke-opacity="0.4"/>
-  <line x1="86" y1="14" x2="14" y2="86" stroke="#C9A961" stroke-width="0.5" stroke-opacity="0.4"/>
+  <!-- Architectural gold five-point emblem, mirroring the favicon -->
+  <path d="M50 20 L60 40 L80 40 L65 55 L70 75 L50 60 L30 75 L35 55 L20 40 L40 40 Z"
+        fill="#C9A961"/>
+  <!-- Subtle gold border to keep the mark crisp at small sizes -->
+  <rect x="0.5" y="0.5" width="99" height="99" fill="none" stroke="#C9A961" stroke-opacity="0.35"/>
 </svg>

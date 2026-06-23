@@ -45,7 +45,64 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  /* Anchors doc-percent markers used by GhostTracker IntersectionObserver. */
+  position: relative;
 }
+
+/* -------- Skip-link ----------------------------------------------- */
+/* Visually-hidden until focused, then dropped into the top-left so
+   keyboard users land in the hero without retreading the nav links. */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 200;
+  padding: 0.65rem 1rem;
+  background: var(--architectural-gold);
+  color: var(--sovereign-navy);
+  border: 1px solid var(--architectural-gold-bright);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  /* visually-hidden pattern (modern `clip-path` is universally supported) */
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: none;
+}
+.skip-link:focus-visible {
+  clip-path: none;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  white-space: normal;
+  outline: 2px solid var(--architectural-gold-bright);
+  outline-offset: 2px;
+  box-shadow: 0 8px 24px rgba(201, 169, 97, 0.35);
+}
+
+/* -------- Ghost scroll milestones --------------------------------- */
+/* Invisible absolutely-positioned markers injected by GhostTracker. They
+   sit at 25/50/75/100% of the body height and trigger via
+   IntersectionObserver without any global scroll listener. */
+.ghost-milestone {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+.ghost-milestone[data-percent="25"]  { top: 25%;  }
+.ghost-milestone[data-percent="50"]  { top: 50%;  }
+.ghost-milestone[data-percent="75"]  { top: 75%;  }
+.ghost-milestone[data-percent="100"] { top: 100%; }
 
 a { color: var(--architectural-gold); text-decoration: none; transition: color var(--transition-quick); }
 a:hover, a:focus-visible { color: var(--architectural-gold-bright); }

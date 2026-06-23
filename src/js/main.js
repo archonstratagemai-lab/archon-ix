@@ -38,12 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
 function initSmoothNavigation() {
   document.querySelectorAll('a[href^="#"]').forEach((link) => {
     link.addEventListener('click', (e) => {
+      // Respect modifier keys so Cmd/Ctrl/Shift+click still opens the
+      // link in a new tab / window per platform convention. Only
+      // hijack the click when the user is plainly activating the link.
+      // Respect modifier keys so Cmd/Ctrl/Shift/Alt + click still opens
+      // the link in a new tab / window per platform convention. Plain
+      // middle-click (button === 1) is also a "new tab" gesture on
+      // Windows / Linux; let it fall through too. Right-click and
+      // back/forward buttons keep the smooth-scroll for consistency
+      // with most smooth-scroll helpers.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+
       const href = link.getAttribute('href') || '';
       if (href.length <= 1) return;
       const target = document.querySelector(href);
       if (!target) return;
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Honor the user's reduced-motion preference. The CSS already
+      // sets scroll-behavior:auto under @media (prefers-reduced-motion),
+      // but scrollIntoView's `behavior: 'smooth'` would override it.
+      const reduceMotion =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
       ghost.track('nav:scroll', { target: href });
     });
   });

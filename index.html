@@ -24,6 +24,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- Skip-link: visually-hidden until focused. Keyboard users can jump
+       straight to the hero (#main) without tabbing through the nav. -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
   <!-- Navigation -->
   <nav class="navbar">
     <div class="container nav-container">
@@ -33,12 +37,12 @@
         <li><a href="#demo">Demo</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <button class="btn btn-primary">Launch Interactive Demo</button>
+      <a href="#demo" class="btn btn-primary">Launch Interactive Demo</a>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!-- Hero Section (target for skip-link #main) -->
+  <section id="main" class="hero">
     <div class="container">
       <h1>Strategic Sovereignty &<br/>Legacy Architecture</h1>
       <p class="hero-subtitle">Digital execution layer for the ARCHON-IX Imperial Protocol by Koda Kinetix. 'We do not accept entropy; we architect stability.' Codified for strategic sovereignty, recurring revenue mathematics, and legacy architecture.</p>
