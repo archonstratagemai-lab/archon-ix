@@ -50,7 +50,7 @@
   </section>
 
   <!-- Stats Section -->
-  <section class="stats">
+  <section class="stats fade-in">
     <div class="container">
       <div class="stat-item">
         <span class="stat-number">500+</span>
@@ -72,7 +72,7 @@
   </section>
 
   <!-- Services Section -->
-  <section id="services" class="services">
+  <section id="services" class="services fade-in">
     <div class="container">
       <h2>Core Modules</h2>
       <div class="service-grid">
@@ -97,7 +97,7 @@
   </section>
 
   <!-- Interactive Demo Section -->
-  <section id="demo" class="demo">
+  <section id="demo" class="demo fade-in">
     <div class="container">
       <h2>Interactive Experience</h2>
       <div class="demo-container">
@@ -127,7 +127,7 @@
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="contact">
+  <section id="contact" class="contact fade-in">
     <div class="container">
       <h2>Initiate Protocol</h2>
       <p>Ready to deploy the ARCHON-IX framework? Contact our team to begin your sovereignty journey.</p>
@@ -144,24 +144,24 @@
   </footer>
 
   <!-- AI Receptionist Widget (Fixed Bottom Right) -->
-  <div id="ai-receptionist-widget" class="ai-widget">
+  <div id="ai-receptionist-widget" class="ai-widget" role="region" aria-label="ARCHON-IX AI Advisor">
     <div class="widget-header">
       <span>ARCHON-IX Advisor</span>
-      <button class="widget-toggle">×</button>
+      <button class="widget-toggle" type="button" aria-expanded="true" aria-controls="chat-messages" aria-label="Toggle ARCHON-IX Advisor">×</button>
     </div>
     <div class="widget-body">
-      <div class="chat-messages" id="chat-messages">
+      <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-atomic="false">
         <div class="message bot">Hello. I am the ARCHON-IX AI Receptionist. How may I assist you today?</div>
       </div>
       <div class="chat-input">
-        <input type="text" id="chat-input" placeholder="Type your query..." />
-        <button id="send-btn">Send</button>
+        <label for="chat-input" class="visually-hidden">Your query</label>
+        <input type="text" id="chat-input" placeholder="Type your query..." autocomplete="off" />
+        <button id="send-btn" type="button">Send</button>
       </div>
     </div>
   </div>
 
-  <!-- Scripts (Relative Paths for GitHub Pages) -->
+  <!-- Single ES-module entry point imports and orchestrates all modules. -->
   <script type="module" src="./src/js/main.js"></script>
-  <script type="module" src="./src/js/ai-receptionist.js"></script>
 </body>
 </html>

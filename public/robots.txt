@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# ARCHON-IX | Strategic Sovereignty & Legacy Architecture
+# Hosted on GitHub Pages under /archon-ix/
+
+Sitemap: https://archonstratagemai-lab.github.io/archon-ix/sitemap.xml
