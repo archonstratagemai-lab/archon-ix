@@ -1,15 +1,14 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  // Use relative base path for GitHub Pages compatibility
-  // This ensures assets are referenced as ./assets/... instead of /assets/...
-  base: './',
-  
+  // Absolute subpath required for GitHub Pages subdirectory hosting
+  base: '/archon-ix/',
+
   server: {
     port: 5173,
     open: true
   },
-  
+
   build: {
     outDir: 'dist',
     sourcemap: true,
