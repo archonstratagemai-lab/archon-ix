@@ -5,16 +5,46 @@
   "description": "Strategic Sovereignty & Legacy Architecture | Digital Execution Layer for the ARCHON-IX Master Codex",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-miniapp.mjs",
     "preview": "vite preview",
-    "build-banner": "node scripts/build-banner.mjs"
+    "build-banner": "node scripts/build-banner.mjs",
+    "verify-membership": "node --experimental-transform-types verify_test.ts",
+    "test": "vitest --run"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^26.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.2.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.9",
+    "jsdom": "^29.1.1",
+    "sharp": "0.35.2",
+    "ts-node": "^10.9.2",
     "vite": "^5.4.10",
-    "sharp": "0.35.2"
+    "vitest": "^4.1.9"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "private": true
+  "private": true,
+  "ts-node": {
+    "esm": true
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "@tanstack/react-query": "^5.101.1",
+    "@twa-dev/sdk": "^8.0.2",
+    "@wagmi/connectors": "^8.0.17",
+    "alchemy-sdk": "^3.6.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "viem": "^2.53.1",
+    "wagmi": "^3.6.18",
+    "zustand": "^5.0.14"
+  }
 }
