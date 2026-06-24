@@ -5,6 +5,15 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+# Permissions used by this workflow. Each line is the minimum scope the
+# consuming step(s) require — remove a line only after confirming no step
+# still needs it. Adding an entry beyond this set has no security benefit
+# here and is not allowed by the GITHUB_TOKEN model; this is the full list.
+#   contents: read    → actions/checkout@v4       (clone the repo for build)
+#   pages: write      → actions/deploy-pages@v4   (publish the artifact)
+#   id-token: write   → OIDC token mint required by deploy-pages@v4
+# Note: `vars.PAGES_BASE_URL` is implicitly readable from any workflow in
+# the repo — no `permissions:` entry is required to access it.
 permissions:
   contents: read
   pages: write
@@ -51,3 +60,38 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # `BASE_URL` is sourced from a repo-level Actions variable
+      # (`Settings → Secrets and variables → Actions → Variables → PAGES_BASE_URL`)
+      # so renaming the GitHub-Pages repo only requires changing the var in one
+      # place. Falls back to `steps.deployment.outputs.page_url` (the URL the
+      # `actions/deploy-pages@v4` action reports for this run) if the variable
+      # is unset.
+      - name: Verify deployed assets are reachable
+        env:
+          BASE_URL: ${{ vars.PAGES_BASE_URL || steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          declare -A expected=( [""]="text/html" ["banner.png"]="image/" )
+          for path in "${!expected[@]}"; do
+            want="${expected[$path]}"
+            url="${BASE_URL%/}/${path}"
+            code="000"
+            ctype=""
+            for i in 1 2 3; do
+              hdr=$(curl -sSI -L --max-time 15 "$url" || true)
+              code=$(echo "$hdr" | head -1 | awk '{print $2}')
+              ctype=$(echo "$hdr" | grep -i '^Content-Type:' | head -1 | awk -F': ' '{print $2}' | tr -d '\r')
+              echo "[attempt $i] [${code:-???}] ${ctype:-no-type} $url"
+              if [ "${code:-000}" = "200" ] && echo "${ctype:-}" | grep -qi "$want"; then
+                break
+              fi
+              sleep 5
+            done
+            if [ "${code:-000}" != "200" ] || ! echo "${ctype:-}" | grep -qi "$want"; then
+              echo "::error::Health check failed for $url: HTTP ${code:-???}, content-type ${ctype:-none}, expected ${want}*"
+              exit 1
+            fi
+          done
+          echo "✓ all asset health checks passed"
+

@@ -1,0 +1,132 @@
+name: Test ARCHON-IX
+
+on:
+  push:
+  pull_request:
+    # Path filter on PR triggers only — `push` to main still fires
+    # the matrix unconditionally so deploy.yml's `needs: build` step
+    # always sees a known-good test signal. PRs that touch only docs,
+    # workflows, or other non-source files skip the 3-OS matrix and
+    # rely on the Lint ARCHON-IX workflow's `ci-parity` job (no path
+    # filter) as their sole gate. Source / contract / manifest
+    # changes still fire both gates. Trade-off: when branch
+    # protection requires the `test` check strictly, docs-only PRs
+    # may show the check as "expected but missing"; either allow
+    # that mode in the rule or fold `README.md` / `docs/**` into the
+    # paths list if you want every docs PR on the matrix.
+    paths:
+      - 'src/**'
+      - 'archon-wallet/**'
+      - 'archon-ix-web3/contracts/**'
+      # Build-affecting surface — none of these live under src/ but
+      # all of them feed `npm run build` (the deploy.yml artifact).
+      # Listed individually rather than as globs (`*.js`, `*.html`)
+      # so the gate is intentional, not speculative — adding a new
+      # build-affecting file should be a deliberate decision, not an
+      # accidental side-effect of a broad wildcard.
+      - 'vite.config.js'
+      - 'index.html'
+      - 'scripts/build-banner.mjs'
+      - 'public/banner.png'
+      # Docs surface — `**/*.{md,mdx,markdown}` matches every
+      # Markdown file anywhere in the repo (README, CONTRIBUTING,
+      # future docs/**, design notes). Paired with strict branch
+      # protection on main, this fires all three gates on docs
+      # PRs (~3-5 min cost) so there's no "expected but missing"
+      # escape hatch that would weaken source-PR safety.
+      - '**/*.{md,mdx,markdown}'
+      # Manifests the matrix reads from.
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+
+# Permissions used by this workflow. Each line is the minimum scope the
+# consuming step(s) require — remove a line only after confirming no step
+# still needs it. Adding an entry beyond this set has no security benefit
+# here; this is the full list.
+#   contents: read    → actions/checkout@v4       (clone the repo + cache key)
+# Note: `vars.PAGES_BASE_URL` is implicitly readable from any workflow in
+# the repo — no `permissions:` entry is required to access it.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          # Pinned: avoid baseline drift when GitHub rotates
+          # windows-latest. Re-pin a yearly cadence after Gate is
+          # stable on the dated image (see README.md CI Workflows
+          # section for the documented `p50` and `p95` references).
+          - windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run vitest suite
+        run: npm test
+
+  # Single-runner sibling to the matrix `test` job. Fires whenever
+  # this workflow fires (so the same `pull_request.paths` filter
+  # gates it). Runs the exact build pipeline `deploy.yml` runs
+  # post-merge (`npm run build-banner` + `npm run build`), which is
+  # what actually validates `vite.config.js`, `index.html`,
+  # `scripts/build-banner.mjs`, and `public/banner.png` — vitest
+  # does NOT read any of those, so the matrix alone wouldn't catch a
+  # build-breaking change to them.
+  #
+  # Single runner (ubuntu-latest) — Windows builds of this stack
+  # tend to surface unrelated line-ending / native-binding issues
+  # that aren't useful to gate here; the matrix `test` job already
+  # covers cross-platform correctness for the runtime surface.
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ubuntu-latest-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ubuntu-latest-node_modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Render OG banner
+        run: npm run build-banner
+
+      - name: Build with Vite
+        run: npm run build

@@ -5,167 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ARCHON-IX | Strategic Sovereignty & Legacy Architecture</title>
   <meta name="description" content="Digital execution layer for the ARCHON-IX Imperial Protocol. We do not accept entropy; we architect stability." />
-  
+
   <!-- Open Graph / Social Media -->
   <meta property="og:title" content="ARCHON-IX | Strategic Sovereignty & Legacy Architecture" />
   <meta property="og:description" content="We do not accept entropy; we architect stability." />
   <meta property="og:image" content="https://archonstratagemai-lab.github.io/archon-ix/banner.png" />
   <meta property="og:url" content="https://archonstratagemai-lab.github.io/archon-ix/" />
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230A1128'/><path d='M50 20 L60 40 L80 40 L65 55 L70 75 L50 60 L30 75 L35 55 L20 40 L40 40 Z' fill='%23C9A961'/></svg>" />
-  
+
   <!-- Stylesheet (Relative Path for GitHub Pages) -->
   <link rel="stylesheet" href="./src/css/style.css" />
-  
+
   <!-- Preload Critical Assets -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <!-- Skip-link: visually-hidden until focused. Keyboard users can jump
-       straight to the hero (#main) without tabbing through the nav. -->
-  <a href="#main" class="skip-link">Skip to main content</a>
+  <!-- React mounts here. The full UI lives inside App.tsx. -->
+  <div id="root"></div>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="logo">ARCHON-IX</a>
-      <ul class="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#demo">Demo</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <a href="#demo" class="btn btn-primary">Launch Interactive Demo</a>
-    </div>
-  </nav>
-
-  <!-- Hero Section (target for skip-link #main) -->
-  <section id="main" class="hero">
-    <div class="container">
-      <h1>Strategic Sovereignty &<br/>Legacy Architecture</h1>
-      <p class="hero-subtitle">Digital execution layer for the ARCHON-IX Imperial Protocol by Koda Kinetix. 'We do not accept entropy; we architect stability.' Codified for strategic sovereignty, recurring revenue mathematics, and legacy architecture.</p>
-      <div class="hero-buttons">
-        <a href="#demo" class="btn btn-primary">Launch Interactive Demo</a>
-        <a href="#contact" class="btn btn-secondary">Consult AI Advisor</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats Section -->
-  <section class="stats fade-in">
-    <div class="container">
-      <div class="stat-item">
-        <span class="stat-number">500+</span>
-        <span class="stat-label">Page Master Codex</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">$10K</span>
-        <span class="stat-label">Implementation Cost</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">3–5x</span>
-        <span class="stat-label">LTV:CAC Ratio</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">180-Day</span>
-        <span class="stat-label">Extraction Plan</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Services Section -->
-  <section id="services" class="services fade-in">
-    <div class="container">
-      <h2>Core Modules</h2>
-      <div class="service-grid">
-        <div class="service-card">
-          <h3>AI Receptionist</h3>
-          <p>Automated client intake with intent classification, Ghost Protocol logging, and sovereign response database.</p>
-        </div>
-        <div class="service-card">
-          <h3>LTV:CAC Calculator</h3>
-          <p>Real-time financial modeling for estate monetization, churn prediction, and scalability thresholds.</p>
-        </div>
-        <div class="service-card">
-          <h3>Ghost Protocol Tracker</h3>
-          <p>Client interaction logging with localStorage persistence, exportable audit trails, and pattern analysis.</p>
-        </div>
-        <div class="service-card">
-          <h3>Sovereign Branding Kit</h3>
-          <p>Navy/gold visual identity system with geometric emblems, typographic hierarchy, and responsive assets.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Interactive Demo Section -->
-  <section id="demo" class="demo fade-in">
-    <div class="container">
-      <h2>Interactive Experience</h2>
-      <div class="demo-container">
-        <div class="demo-panel">
-          <h3>Quick Reply Simulator</h3>
-          <div class="quick-replies">
-            <button class="btn btn-small" data-query="What is the implementation cost?">Implementation Cost?</button>
-            <button class="btn btn-small" data-query="How does the AI Receptionist work?">AI Receptionist?</button>
-            <button class="btn btn-small" data-query="Show me the LTV:CAC calculator.">LTV:CAC Calculator?</button>
-          </div>
-          <div id="response-output" class="response-output">
-            <p>Select a quick reply to see the AI response...</p>
-          </div>
-        </div>
-        <div class="demo-panel">
-          <h3>LTV:CAC Calculator</h3>
-          <form id="ltv-cac-form">
-            <label>Monthly Retainer ($): <input type="number" id="retainer" value="5000" /></label>
-            <label>Contract Length (months): <input type="number" id="contract" value="12" /></label>
-            <label>Acquisition Cost ($): <input type="number" id="cac" value="2000" /></label>
-            <button type="submit" class="btn btn-primary">Calculate Ratio</button>
-          </form>
-          <div id="calc-result" class="calc-result">Ratio: --</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="contact fade-in">
-    <div class="container">
-      <h2>Initiate Protocol</h2>
-      <p>Ready to deploy the ARCHON-IX framework? Contact our team to begin your sovereignty journey.</p>
-      <a href="mailto:archonstratagemai@gmail.com" class="btn btn-primary">Email Us Directly</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2026 ARCHON-IX | Koda Kinetix Press. All rights reserved.</p>
-      <p class="footer-tagline">"I recognize that my legacy is a product of design, not chance."</p>
-    </div>
-  </footer>
-
-  <!-- AI Receptionist Widget (Fixed Bottom Right) -->
-  <div id="ai-receptionist-widget" class="ai-widget" role="region" aria-label="ARCHON-IX AI Advisor">
-    <div class="widget-header">
-      <span>ARCHON-IX Advisor</span>
-      <button class="widget-toggle" type="button" aria-expanded="true" aria-controls="chat-messages" aria-label="Toggle ARCHON-IX Advisor">×</button>
-    </div>
-    <div class="widget-body">
-      <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-atomic="false">
-        <div class="message bot">Hello. I am the ARCHON-IX AI Receptionist. How may I assist you today?</div>
-      </div>
-      <div class="chat-input">
-        <label for="chat-input" class="visually-hidden">Your query</label>
-        <input type="text" id="chat-input" placeholder="Type your query..." autocomplete="off" />
-        <button id="send-btn" type="button">Send</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Single ES-module entry point imports and orchestrates all modules. -->
-  <script type="module" src="./src/js/main.js"></script>
+  <!-- React entry — TypeScript ESM, processed by Vite. -->
+  <script type="module" src="./src/main.tsx"></script>
 </body>
 </html>

@@ -1,0 +1,48 @@
+name: Lint ARCHON-IX
+
+on:
+  push:
+  pull_request:
+
+# Permissions used by this workflow. Each line is the minimum scope the
+# consuming step(s) require — remove a line only after confirming no step
+# still needs it. Adding an entry beyond this set has no security benefit
+# here; this is the full list.
+#   contents: read    → actions/checkout@v4       (clone the repo + cache key)
+# Note: `vars.PAGES_BASE_URL` is implicitly readable from any workflow in
+# the repo — no `permissions:` entry is required to access it.
+permissions:
+  contents: read
+
+jobs:
+  ci-parity:
+    # Single runner — this is a fast, deterministic file-audit job.
+    # Multi-OS matrix coverage lives in the `Test ARCHON-IX` workflow
+    # (.github/workflows/test.yml); duplicating it here would burn
+    # minutes without buying any new signal.
+    runs-on: ubuntu-latest
+    # 5 min ceiling is generous — the audit pipeline (npm ci + vitest
+    # on a single 13-test file) finishes in well under a minute with
+    # cached deps.
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Filter by FILE PATH so only the ci-parity subset runs here.
+      # The full vitest suite (including the 5 alchemy mock tests)
+      # stays reserved for the slower `Test ARCHON-IX` matrix so this
+      # job can finish well under 30s on cached `npm ci` while still
+      # enforcing the workflow-permissions audit-header convention on
+      # every PR.
+      - name: Run ci-parity audit
+        run: npx vitest --run src/lib/ci-parity.test.ts
