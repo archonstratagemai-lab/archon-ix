@@ -132,6 +132,7 @@ export default function App() {
         <main id="main-content" style={{ flex: 1 }}>
           <InnerApp />
         </main>
+        <Footer />
         <AiWidget />
         <GhostTracker />
       </div>
