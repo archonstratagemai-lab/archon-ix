@@ -52,9 +52,9 @@ describe("verifyMembership", () => {
       new Error("synthetic SDK rejection for test")
     );
     // Default contract address is empty so the "unset" path is the
-    // starting state. `vi.stubEnv` propagates into both
-    // `import.meta.env` and `process.env` under vitest 4.x; raw
-    // `process.env` mutation alone does not propagate.
+    // starting state. `vi.stubEnv` propagates into `process.env`
+    // under vitest 4.x; readEnv checks process.env first so the
+    // stub takes effect even when import.meta.env has a baked value.
     vi.stubEnv(ENV_KEY, "");
   });
 

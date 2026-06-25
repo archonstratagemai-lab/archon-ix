@@ -4,6 +4,12 @@ import { defineConfig } from 'vite'
 // is required for the production build. Skip @vitejs/plugin-react to avoid
 // the version-skew install failures we hit this morning.
 export default defineConfig({
+  // Polyfill `process` for browser — alchemy-sdk references process.env
+  // internally, which doesn't exist in the browser without Node.
+  define: {
+    'process.env': {},
+    'process.platform': JSON.stringify('browser'),
+  },
   // Vitest config — picked up by `npx vitest --run` (no-arg form). Include
   // every `*.{test,spec}.{ts,tsx}` anywhere under src/ regardless of whether
   // it's a JSX component test (tsx) or a TS module test (ts). Exclude only
@@ -22,6 +28,7 @@ export default defineConfig({
   // Vitest 4 moved poolOptions out of the `test:` namespace into top-level
   // config (deprecation warning was emitted while it stayed nested). Single
   // thread avoids worker spawn issues in constrained environments.
+  pool: 'threads',
   poolOptions: {
     threads: {
       singleThread: true,

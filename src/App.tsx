@@ -1,21 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { WagmiProvider, useConnect, useAccount } from "wagmi";
 import { wagmiConfig } from "./lib/wagmi";
 import { tg } from "./lib/telegram";
+import { useStore } from "./lib/store";
 import { VerificationGate } from "./components/VerificationGate";
 import { Header } from "../archon-wallet/components/Header";
 import { MiniAppMainButton } from "./components/MiniAppMainButton";
 import { MiniApp } from "./components/MiniApp";
+import MemberDashboard from "./components/MemberDashboard";
+import WalletPortfolio from "./components/WalletPortfolio";
+import ContractManager from "./components/ContractManager";
+import Hero from "./components/Hero";
+import Stats from "./components/Stats";
+import Services from "./components/Services";
+import Demo from "./components/Demo";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
+import AiWidget from "./components/AiWidget";
+import GhostTracker from "./components/GhostTracker";
 
 function InnerApp() {
   const { connect, connectors } = useConnect();
   const { isConnected } = useAccount();
+  const { tier, tokenId, mintedAt } = useStore();
+  const [activeSection, setActiveSection] = useState<"dashboard" | "services" | "portfolio" | "admin">("dashboard");
 
   useEffect(() => {
-    // Show the Telegram Mini App back button only when we're actually
-    // running inside Telegram. The SDK's BackButton.show() throws or
-    // silently no-ops in a regular browser, so a try/catch keeps dev
-    // mode from spamming the console.
     try {
       tg.BackButton.show();
       tg.BackButton.onClick(() => {
@@ -30,7 +40,7 @@ function InnerApp() {
   if (!isConnected) {
     return (
       <div className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "70vh", gap: "1rem" }}>
-        <h1 style={{ marginBottom: "0.25rem" }}>ARCHON‑IX Portal</h1>
+        <h1 style={{ marginBottom: "0.25rem" }}>ARCHON&#8209;IX Portal</h1>
         <p style={{ color: "var(--text-muted)", maxWidth: 480, textAlign: "center" }}>
           Connect a wallet to verify your Membership NFT and access the sovereign execution layer.
         </p>
@@ -47,28 +57,69 @@ function InnerApp() {
   }
 
   return (
-    <div className="container" style={{ paddingBlock: "2rem" }}>
-      <VerificationGate>
-            {/* Mini App component demonstrating Telegram Mini App integration */}
-            <MiniApp />
-            {/* Minimal "main portal UI" — the verification gate is the meaningful
-                product. Future work can mount richer components here without
-                having to revisit the shell. */}
-            <h1>Welcome to the ARCHON‑IX Portal</h1>
-            <p style={{ color: "var(--text-muted)" }}>
-              Membership verified. The sovereign execution layer is open.
-            </p>
-          </VerificationGate>
-    </div>
+    <VerificationGate>
+      <MiniApp />
+      <nav className="portal-nav">
+        <div className="container">
+          <div className="portal-nav-inner">
+            <button
+              type="button"
+              className={`portal-nav-btn ${activeSection === "dashboard" ? "active" : ""}`}
+              onClick={() => setActiveSection("dashboard")}
+            >
+              Dashboard
+            </button>
+            <button
+              type="button"
+              className={`portal-nav-btn ${activeSection === "services" ? "active" : ""}`}
+              onClick={() => setActiveSection("services")}
+            >
+              Services
+            </button>
+            <button
+              type="button"
+              className={`portal-nav-btn ${activeSection === "portfolio" ? "active" : ""}`}
+              onClick={() => setActiveSection("portfolio")}
+            >
+              Portfolio
+            </button>
+            <button
+              type="button"
+              className={`portal-nav-btn ${activeSection === "admin" ? "active" : ""}`}
+              onClick={() => setActiveSection("admin")}
+            >
+              Admin
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {activeSection === "dashboard" && (
+        <>
+          <MemberDashboard tier={tier} tokenId={tokenId ?? undefined} mintedAt={mintedAt ?? undefined} />
+          <Hero />
+          <Stats />
+        </>
+      )}
+      {activeSection === "services" && (
+        <>
+          <Services />
+          <Demo />
+          <Contact />
+        </>
+      )}
+      {activeSection === "portfolio" && <WalletPortfolio />}
+      {activeSection === "admin" && <ContractManager />}
+    </VerificationGate>
   );
 }
 
 export default function App() {
   return (
     <WagmiProvider config={wagmiConfig}>
-      {/* No Tailwind utilities here on purpose — the project design
-          system lives in src/css/style.css. Inline styles cover the few
-          flex/min-height primitives the shell needs. */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <div
         style={{
           display: "flex",
@@ -78,9 +129,11 @@ export default function App() {
         }}
       >
         <Header />
-        <main style={{ flex: 1 }}>
+        <main id="main-content" style={{ flex: 1 }}>
           <InnerApp />
         </main>
+        <AiWidget />
+        <GhostTracker />
       </div>
     </WagmiProvider>
   );

@@ -492,3 +492,333 @@ h3 { font-size: 1.15rem; font-weight: 600; }
   overflow: hidden; clip: rect(0,0,0,0);
   white-space: nowrap; border: 0;
 }
+
+/* -------- Portal Navigation --------------------------------------- */
+.portal-nav {
+  background: rgba(10, 17, 40, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(201, 169, 97, 0.12);
+  position: sticky;
+  top: 52px;
+  z-index: 40;
+}
+.portal-nav-inner {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+}
+.portal-nav-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-quick);
+  white-space: nowrap;
+  min-height: 40px;
+}
+.portal-nav-btn:hover {
+  color: var(--text-light);
+  background: rgba(201, 169, 97, 0.08);
+}
+.portal-nav-btn.active {
+  color: var(--architectural-gold);
+  background: rgba(201, 169, 97, 0.12);
+  border-color: rgba(201, 169, 97, 0.25);
+}
+
+/* -------- Member Dashboard ---------------------------------------- */
+.dashboard { padding-block: clamp(2rem, 4vw, 3rem); }
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.dashboard-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  border: 2px solid;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+}
+.tier-icon { font-size: 1.2rem; }
+.dashboard-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.status-dot.active {
+  background: var(--health-green);
+  box-shadow: 0 0 6px var(--health-green);
+}
+.status-dot.inactive {
+  background: var(--health-red);
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } }
+.dash-card {
+  background: linear-gradient(180deg, var(--sovereign-navy-soft), var(--sovereign-navy-deep));
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+.dash-card h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--architectural-gold);
+  margin-bottom: 0.85rem;
+}
+.dash-card-wide {
+  grid-column: 1 / -1;
+}
+.dash-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed rgba(201, 169, 97, 0.1);
+}
+.dash-field:last-child { border-bottom: 0; }
+.dash-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.dash-value {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+.dash-value.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+}
+.perk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.perk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.perk-check { font-weight: 700; }
+.dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* -------- Wallet Portfolio ---------------------------------------- */
+.portfolio { padding-block: clamp(2rem, 4vw, 3rem); }
+.portfolio h2 { margin-bottom: 1rem; }
+.portfolio-card {
+  background: linear-gradient(180deg, var(--sovereign-navy-soft), var(--sovereign-navy-deep));
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.portfolio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  background: rgba(201, 169, 97, 0.06);
+  border-bottom: 1px solid rgba(201, 169, 97, 0.12);
+  font-size: 0.85rem;
+}
+.portfolio-chain {
+  color: var(--architectural-gold);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.portfolio-loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+.token-list {
+  padding: 0.5rem 0;
+}
+.token-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(201, 169, 97, 0.06);
+  transition: background var(--transition-quick);
+}
+.token-row:last-child { border-bottom: 0; }
+.token-row:hover { background: rgba(201, 169, 97, 0.04); }
+.token-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sovereign-navy);
+  border: 1px solid rgba(201, 169, 97, 0.2);
+  border-radius: 50%;
+  color: var(--architectural-gold);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.token-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.token-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+.token-balance {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.token-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* -------- Contract Manager ---------------------------------------- */
+.contract-manager { padding-block: clamp(2rem, 4vw, 3rem); }
+.contract-manager h2 { margin-bottom: 0.3rem; }
+.cm-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.cm-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
+.cm-card {
+  background: linear-gradient(180deg, var(--sovereign-navy-soft), var(--sovereign-navy-deep));
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+.cm-card h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--architectural-gold);
+  margin-bottom: 0.85rem;
+}
+.cm-form {
+  display: grid;
+  gap: 0.75rem;
+}
+.cm-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.cm-form input,
+.cm-form select,
+.cm-label textarea {
+  background: var(--sovereign-navy-deep);
+  border: 1px solid rgba(201, 169, 97, 0.25);
+  border-radius: var(--radius-sm);
+  color: var(--text-light);
+  padding: 0.65rem 0.75rem;
+  font-size: 0.9rem;
+  transition: border-color var(--transition-quick), box-shadow var(--transition-quick);
+}
+.cm-form input:focus,
+.cm-form select:focus,
+.cm-label textarea:focus {
+  outline: none;
+  border-color: var(--architectural-gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.16);
+}
+.cm-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.cm-label textarea {
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+}
+.cm-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.cm-label-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex: 1;
+}
+.cm-label-inline select {
+  background: var(--sovereign-navy-deep);
+  border: 1px solid rgba(201, 169, 97, 0.25);
+  border-radius: var(--radius-sm);
+  color: var(--text-light);
+  padding: 0.65rem 0.75rem;
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+.cm-status {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(201, 169, 97, 0.08);
+  border: 1px solid rgba(201, 169, 97, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

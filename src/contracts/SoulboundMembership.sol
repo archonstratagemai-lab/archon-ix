@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
@@ -10,41 +11,31 @@ import '@openzeppelin/contracts/access/Ownable.sol';
  * @notice Minting is restricted to the owner (deployer) for administrative control.
  */
 contract SoulboundMembershipToken is ERC721, Ownable {
-    uint256 private _baseTokenURI;
+    uint256 private _nextTokenIdCounter;
+    mapping(uint256 => string) private _tokenURIs;
 
-    constructor(string memory baseTokenURI) ERC721("ARCHON-IX Membership", "ARCHON-IX-SBT") ERC721Initialized(1) {
-        require(string(bytes(baseTokenURI)).length > 0, "Base URI must not be empty");
-        _baseTokenURI = bytes(baseTokenURI);
-    }
+    constructor() ERC721("ARCHON-IX Soulbound", "ARCHON-SBT") {}
 
     // Prevent transfers - this is a soulbound token
-    function transferFrom(address from, address to, uint256 tokenId) public override returns (bool) {
-        revert("This is a soulbound NFT - cannot be transferred");
+    function transferFrom(address, address, uint256) public pure override returns (bool) {
+        revert("SBT: soulbound — cannot transfer");
     }
 
-    function transfer(address from, address to, uint256 tokenId) public override returns (bool) {
-        revert("This is a soulbound NFT - cannot be transferred");
+    function safeTransferFrom(address, address, uint256) public pure override returns (bool) {
+        revert("SBT: soulbound — cannot transfer");
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId) public override returns (bool) {
-        revert("This is a soulbound NFT - cannot be transferred");
-    }
-
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public override returns (bool) {
-        revert("This is a soulbound NFT - cannot be transferred");
-    }
-
-    function baseURI() public view override returns (string memory) {
-        bytes memory uri = bytes(_baseTokenURI);
-        return string(uri);
+    function safeTransferFrom(address, address, uint256, bytes memory) public pure override returns (bool) {
+        revert("SBT: soulbound — cannot transfer");
     }
 
     // Mint a new soulbound token to the specified recipient
-    function mint(address recipient, bytes32 metadataHash) public onlyOwner returns (uint256) {
-        uint256 tokenId = _nextTokenId();
+    function mint(address recipient, string memory tokenUri) public onlyOwner returns (uint256) {
+        uint256 tokenId = _nextTokenIdCounter;
+        _nextTokenIdCounter++;
         _mint(recipient, tokenId);
-        _setTokenURI(tokenId, string(abi.encodePacked(string(_baseTokenURI), "/", bytes32ToString(metadataHash))));
-        emit SoulboundMinted(tokenId, recipient, metadataHash);
+        _tokenURIs[tokenId] = tokenUri;
+        emit SoulboundMinted(tokenId, recipient, tokenUri);
         return tokenId;
     }
 
@@ -53,15 +44,10 @@ contract SoulboundMembershipToken is ERC721, Ownable {
         _burn(tokenId);
     }
 
-    event SoulboundMinted(uint256 indexed tokenId, address indexed recipient, bytes32 indexed metadataHash);
-
-    // Helper to convert bytes32 to string for URI construction
-    function bytes32ToString(bytes32 b) private pure returns (string memory) {
-        bytes memory bs = new bytes(32);
-        for (uint256 i = 0; i < 32; i++) {
-            if (b[i] == 0) break;
-            bs[i] = b[i];
-        }
-        return string(bs);
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        return _tokenURIs[tokenId];
     }
+
+    event SoulboundMinted(uint256 indexed tokenId, address indexed recipient, string tokenUri);
 }

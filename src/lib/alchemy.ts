@@ -14,8 +14,15 @@ type ImportMetaWithEnv = ImportMeta & {
  * a stale snapshot at module-load time.
  */
 function readEnv(name: string): string | undefined {
+  // Check process.env first — vitest can stub this via vi.stubEnv.
+  // In the browser, process is polyfilled as {} by Vite's define config.
+  if (typeof process !== "undefined") {
+    const v = process.env?.[name];
+    if (v !== undefined) return v;
+  }
+  // Fall back to Vite's import.meta.env (baked at build time from .env).
   const env = (import.meta as ImportMetaWithEnv).env;
-  return env?.[name] ?? process.env[name];
+  return env?.[name];
 }
 
 /**

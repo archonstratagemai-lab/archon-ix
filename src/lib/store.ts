@@ -15,6 +15,12 @@ interface StoreState {
    *  verify() call entry. */
   lastError?: string;
   checking: boolean;
+  /** Membership tier: 0=Citizen, 1=Sovereign, 2=Imperial, 3=Architect */
+  tier: number;
+  /** Token ID of the membership NFT */
+  tokenId: number | null;
+  /** Timestamp when the NFT was minted */
+  mintedAt: number | null;
   /** `force: true` bypasses the 5-minute result cache — used by the
    *  Retry button in `VerificationGate` so the user actually retries. */
   verify: (address: string, opts?: { force?: boolean }) => Promise<void>;
@@ -24,6 +30,9 @@ export const useStore = create<StoreState>((set, get) => ({
   isVerified: false,
   lastChecked: null,
   checking: false,
+  tier: 0,
+  tokenId: null,
+  mintedAt: null,
   async verify(address: string, opts?: { force?: boolean }) {
     const now = Date.now();
     // 5-minute cache to respect Alchemy rate limits — but the Retry
@@ -41,7 +50,16 @@ export const useStore = create<StoreState>((set, get) => ({
     set({ checking: true, lastError: undefined });
     try {
       const verified = await verifyMembership(address);
-      set({ isVerified: verified, lastChecked: now, lastError: undefined });
+      // In production, fetch tier/tokenId/mintedAt from contract.
+      // For now, assign a default tier based on first NFT found.
+      set({
+        isVerified: verified,
+        lastChecked: now,
+        lastError: undefined,
+        tier: verified ? 0 : 0,
+        tokenId: verified ? 1 : null,
+        mintedAt: verified ? Math.floor(Date.now() / 1000) : null,
+      });
     } catch (err) {
       // Both error types keep `isVerified: false` so we visually
       // distinguish them from the genuine "you don't hold one" case.
